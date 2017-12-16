@@ -13,14 +13,14 @@ def Socket
   def client_request
     puts "Ready for a request"
     request_lines = []
-    while line = client.gets and !line.chomp.empty?
+    while line = listener.gets and !line.chomp.empty?
       request_lines << line.chomp
     end
     request_lines
   end
 
   def run_server
-    
+
   end
 
 end
