@@ -1,10 +1,11 @@
 require 'socket'
+require_relative 'paths'
+
 
 class Server
 
   def initialize(port)
-    @port = port
-    @server = TCPServer.new(@port)
+    @server = TCPServer.new(port)
   end
 
   attr_reader :server, :listener, :port
@@ -14,16 +15,23 @@ class Server
     loop do
       client = server.accept
       request_lines = client_request(client)
-      formatted_request = format_request(request_lines)
-      puts "Starting Up Server"
-      formatted_request = formatted_request.map do |request|
-        format_paragraph(request)
+      diagnotistics = diagnotistics(request_lines)
+      formatted_diagnostics = format_diagnostics(diagnotistics)
+      paragraph_request = formatted_diagnostics.map do |diagnostic|
+        format_paragraph(diagnostic)
       end.join(" ")
-      response = "Hello World (#{counter}) <p>#{formatted_request}</p>"
+
+      puts "Starting Up Server"
+      response = "Hello World (#{counter}) <p>#{paragraph_request}</p>"
       output = format_output(response)
       header = headers(output)
       client.puts header
       client.puts output
+
+      puts header
+      puts formatted_diagnostics.join("\r\n")
+      puts "\n"
+
       client.close
       counter += 1
     end
@@ -40,16 +48,28 @@ class Server
     request_lines
   end
 
-  def format_request(request)
+  def format_diagnostics(request)
     [
-      "Verb: #{request.first.split(' ').first}",
-      "Path: #{request.first.split(' ')[1]}",
-      "Protocol: #{request.first.split(' ')[2]}",
-      "#{request[1].split('')[0..14].join}",
-      "Port: #{request[1].split('')[-4..-1].join}",
-      "Origin: #{request[1].split('')[6..14].join}",
-      "#{request[6]}"
+      "Verb: #{request[:verb]}",
+      "Path: #{request[:path]}",
+      "Protocol: #{request[:protocol]}",
+      "#{request[:host]}",
+      "Port: #{request[:port]}",
+      "Origin: #{request[:origin]}",
+      "#{request[:accept]}"
     ]
+  end
+
+  def diagnotistics(request)
+    {
+      verb: request.first.split(' ').first,
+      path: request.first.split(' ')[1],
+      protocol: request.first.split(' ')[2],
+      host: request[1].split('')[0..14].join,
+      port: request[1].split('')[-4..-1].join,
+      origin: request[1].split('')[6..14].join,
+      accept: request[6]
+    }
   end
 
   def format_paragraph(paragraphs)
@@ -67,6 +87,7 @@ class Server
   def format_output(response)
     "<html><head></head><body>#{response}</body></html>"
   end
+
 
 end
 
