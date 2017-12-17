@@ -8,10 +8,10 @@ class Paths
 
   def root?
     path == "/"
-  end 
+  end
 
   def hello?
-    @path == "/hello"
+    path == "/hello"
   end
 
   def date_time?
@@ -20,6 +20,10 @@ class Paths
 
   def shut_down?
     path == "/shutdown"
+  end
+
+  def word_search?
+    path.include?("word_search")
   end
 
 end

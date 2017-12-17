@@ -1,7 +1,6 @@
 require 'socket'
 require_relative 'paths'
 
-
 class Server
 
   def initialize(port)
@@ -11,18 +10,44 @@ class Server
   attr_reader :server, :listener, :port
 
   def run_server
-    counter = 0
+    hello_counter = 0
+    request_counter = 0
     loop do
       client = server.accept
       request_lines = client_request(client)
-      diagnotistics = diagnotistics(request_lines)
-      formatted_diagnostics = format_diagnostics(diagnotistics)
+      diagnostics = diagnostics(request_lines)
+      path = Paths.new(diagnostics[:path])
+      formatted_diagnostics = format_diagnostics(diagnostics)
       paragraph_request = formatted_diagnostics.map do |diagnostic|
         format_paragraph(diagnostic)
       end.join(" ")
 
+      if path.hello?
+        response = "Hello World (#{hello_counter})"
+        hello_counter += 1
+        request_counter += 1
+      elsif path.root?
+        response = "<h> <strong>Diagnostics</strong> </h> #{paragraph_request}"
+        request_counter += 1
+      elsif path.date_time?
+        response = "#{Time.now.strftime("%I %M:%p on %A, %B %e, %Y")}"
+        request_counter += 1
+      elsif path.shut_down?
+        response = "Total requests: #{request_counter}"
+      elsif path.word_search?
+        response = "To search for a word, add '?' after word_search, then the word."
+        if path.path.include?('?')
+          split_path = path.path.split('?')
+          if system_words.include?(split_path[1])
+            response = "#{split_path[1].upcase} is a known word"
+          else
+            response = "#{split_path[1].upcase} is a not known word"
+          end
+        end
+        request_counter += 1
+      end
+
       puts "Starting Up Server"
-      response = "Hello World (#{counter}) <p>#{paragraph_request}</p>"
       output = format_output(response)
       header = headers(output)
       client.puts header
@@ -33,7 +58,7 @@ class Server
       puts "\n"
 
       client.close
-      counter += 1
+      break if path.shut_down?
     end
   end
 
@@ -48,6 +73,12 @@ class Server
     request_lines
   end
 
+  def system_words
+    words = File.readlines("/usr/share/dict/words")
+    words = words.map { |word| word.chomp }
+    words
+  end
+
   def format_diagnostics(request)
     [
       "Verb: #{request[:verb]}",
@@ -60,7 +91,7 @@ class Server
     ]
   end
 
-  def diagnotistics(request)
+  def diagnostics(request)
     {
       verb: request.first.split(' ').first,
       path: request.first.split(' ')[1],
@@ -87,7 +118,6 @@ class Server
   def format_output(response)
     "<html><head></head><body>#{response}</body></html>"
   end
-
 
 end
 
