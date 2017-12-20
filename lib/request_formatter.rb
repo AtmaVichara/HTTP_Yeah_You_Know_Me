@@ -1,6 +1,6 @@
-class RequestFormatter
+class RequestParser
 
-  def diagnostics(request)
+  def request_parser(request)
     {
       verb: request.first.split(' ').first,
       path: request.first.split(' ')[1],
@@ -12,7 +12,7 @@ class RequestFormatter
     }
   end
 
-  def format_diagnostics(request)
+  def debug_info(request)
     [
       "Verb: #{request[:verb]}",
       "Path: #{request[:path]}",
