@@ -8,7 +8,7 @@ class Game
     @number = rand(0..100)
     @guess = ""
     @guess_count = 0
-    @request = RequestFormatter.new
+    @request = RequestParser.new
   end
 
   def guessing_game_info
@@ -39,6 +39,7 @@ class Game
   def read_guess(client, request_lines)
     @guess_count += 1
     bytes = request.content_length(request_lines)
-    @guess = client.read(bytes.to_i)
+    body = client.read(bytes.to_i) if !bytes.nil?
+    @guess = body.split("\r\n")[3]
   end
 end
