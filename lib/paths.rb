@@ -26,4 +26,12 @@ class Paths
     path.include?("word_search")
   end
 
+  def start_game?
+    path == "/start_game"
+  end
+
+  def game?
+    path.start_with?("/game")
+  end
+
 end
