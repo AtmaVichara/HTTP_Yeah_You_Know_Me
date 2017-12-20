@@ -51,7 +51,10 @@ loop do
   client.puts output
   client.close
 
+  puts "\n"
   puts debug_info
+  puts "\n"
 
+  
   break if path.shut_down?
 end

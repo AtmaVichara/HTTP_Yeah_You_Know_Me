@@ -12,9 +12,8 @@ class Responses
 
   attr_accessor :response
 
-  def initialize(debug_info, request_parser)
-    # @request_parser        = RequestParser.new
-    @path                  = Paths.new(request_parser[:path])
+  def initialize(debug_info, path)
+    @path                  = path
     @debug_info            = debug_info
   end
 
@@ -23,7 +22,7 @@ class Responses
   end
 
   def hello(counter)
-    "Hello World (#{counter})" + "#{debug}"
+    "Hello World (#{counter})"
   end
 
   def date_time
@@ -35,11 +34,11 @@ class Responses
   end
 
   def word_search
-    split_path = path.path.split('=')
+    split_path = path[:path].split('=')
     if system_words.include?(split_path[1])
       "#{split_path[1].upcase} is a known word"
     else
-      "#{split_path[1].upcase} is a not known word"
+      "#{split_path[1].upcase} is not a known word"
     end
   end
 
