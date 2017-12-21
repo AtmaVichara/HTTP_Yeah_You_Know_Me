@@ -37,4 +37,14 @@ class ResponsesTest < Minitest::Test
   def test_start_game_returns_good_luck
     assert_equal "Good Luck!!!", responses.start_game
   end
+
+
+  def test_not_found_returns_correct_string
+    assert_equal "OI!! Why are you searching for somthing that doesn't exist... Come on now.",
+    responses.not_found
+  end
+
+  def test_server_error_returns_system_error
+    assert_equal "SYSTEMERROR!!", responses.server_error
+  end
 end
