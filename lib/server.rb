@@ -14,9 +14,9 @@ class Server
               :hello_counter,
               :request_counter
 
-  def initialize
-    @server          = ServerInfo.new(9292)
-    @tcp             = server.server
+  def initialize(port)
+    @server          = ServerInfo.new
+    @tcp             = TCPServer.new(port)
     @parser          = RequestParser.new
     @game            = Game.new
     @hello_counter   = 0

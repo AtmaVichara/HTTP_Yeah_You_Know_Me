@@ -6,10 +6,6 @@ class ServerInfo
 
   attr_reader :server, :port
 
-  def initialize(port)
-    @server = TCPServer.new(port)
-  end
-
   def client_request(listener)
     request_lines = []
     while line = listener.gets and !line.chomp.empty?

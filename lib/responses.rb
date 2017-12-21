@@ -13,8 +13,8 @@ class Responses
   attr_accessor :response
 
   def initialize(debug_info, path)
-    @path                  = path
-    @debug_info            = debug_info
+    @path       = path
+    @debug_info = debug_info
   end
 
   def root

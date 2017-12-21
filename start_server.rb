@@ -1,5 +1,5 @@
 require "./lib/server"
 require "pry"
 
-server = Server.new
+server = Server.new(9292)
 server.run
