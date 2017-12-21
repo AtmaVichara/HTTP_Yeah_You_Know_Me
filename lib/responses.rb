@@ -1,5 +1,5 @@
 require "./lib/paths.rb"
-require "./lib/request_formatter.rb"
+require "./lib/request_parser.rb"
 require "./lib/game.rb"
 
 class Responses
@@ -49,9 +49,12 @@ class Responses
   end
 
   def start_game
-    Game.new
+    game = Game.new
     "Good Luck!!!"
   end
 
+  def not_found
+    "OI!! Why are you searching for somthing that doesn't exist... Come on now."
+  end
 
 end

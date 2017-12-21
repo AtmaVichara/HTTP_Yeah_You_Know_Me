@@ -21,5 +21,4 @@ class ServerTest < Minitest::Test
 
     assert_equal "Hello World (0)", response.body
   end
-
 end
