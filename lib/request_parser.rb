@@ -8,7 +8,7 @@ class RequestParser
       host: request[1].split('')[0..14].join,
       port: request[1].split('')[-4..-1].join,
       origin: request[1].split('')[6..14].join,
-      accept: request[6].split(":")[1]
+      accept: request.select { |i| i.include?("Accept") }[0]
     }
   end
 
@@ -20,7 +20,7 @@ class RequestParser
       "#{request[:host]}",
       "Port: #{request[:port]}",
       "Origin: #{request[:origin]}",
-      "Accept:#{request[:accept]}"
+      "#{request[:accept]}"
     ]
   end
 

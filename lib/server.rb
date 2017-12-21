@@ -1,42 +1,77 @@
-require 'socket'
-require_relative 'paths'
-require_relative 'request_formatter'
+require "./lib/server_info.rb"
+require "./lib/request_parser.rb"
+require "./lib/paths.rb"
+require "./lib/responses.rb"
+require "./lib/game.rb"
+require "pry"
 
 class Server
 
-  attr_reader :server, :port
+  attr_reader :server,
+              :tcp,
+              :parser,
+              :game,
+              :hello_counter,
+              :request_counter
 
   def initialize(port)
-    @server = TCPServer.new(port)
+    @server          = ServerInfo.new
+    @tcp             = TCPServer.new(port)
+    @parser          = RequestParser.new
+    @game            = Game.new
+    @hello_counter   = 0
+    @request_counter = 0
   end
 
-  def client_request(listener)
-    request_lines = []
-    while line = listener.gets and !line.chomp.empty?
-      request_lines << line.chomp
+  def run
+    loop do
+      client           = tcp.accept
+      request_lines    = server.client_request(client)
+      request_parsings = parser.request_parser(request_lines)
+      debug_info       = parser.debug_info(request_parsings)
+      path             = Paths.new(request_parsings[:path])
+      responses        = Responses.new(debug_info, request_parsings)
+      @request_counter += 1
+
+      if path.hello?
+        @hello_counter += 1
+        output = server.format_output(responses.hello(@hello_counter))
+        header = server.headers(output)
+      elsif path.root?
+        output = server.format_output(responses.root)
+        header = server.headers(output)
+      elsif path.date_time?
+        output = server.format_output(responses.date_time)
+        header = server.headers(output)
+      elsif path.word_search?
+        output = server.format_output(responses.word_search)
+        header = server.headers(output)
+      elsif path.shut_down?
+        output = server.format_output(responses.shut_down(@request_counter))
+        header = server.headers(output)
+      elsif path.start_game? && request_parsings[:verb] == "POST"
+        output = server.format_output(responses.start_game)
+        header = server.headers(output)
+      elsif path.game? && request_parsings[:verb] == "GET"
+        output = server.format_output(game.start_game)
+        header = server.headers(output)
+      elsif path.game? && request_parsings[:verb] == "POST"
+        output = server.format_output(game.read_guess(client, request_lines))
+        header = server.redirect_headers("game", output)
+      elsif path.not_found?
+        output = server.format_output(responses.not_found)
+        header = server.headers("400", output)
+      end
+
+      client.puts header
+      client.puts output
+      client.close
+
+      puts "\n"
+      puts debug_info
+      puts "\n"
+
+      break if path.shut_down?
     end
-    request_lines
   end
-
-  def headers(output)
-    ["http/1.1 200 ok",
-      "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-      "server: ruby",
-      "content-type: text/html; charset=iso-8859-1",
-      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-  end
-
-  def game_post_headers(output)
-    ["http/1.1 302 found",
-      "Location: http://127.0.0.1:9292/game",
-      "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-      "server: ruby",
-      "content-type: text/html; charset=iso-8859-1",
-      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-  end
-
-  def format_output(response)
-    "<html><head></head><body>#{response}</body></html>"
-  end
-
 end

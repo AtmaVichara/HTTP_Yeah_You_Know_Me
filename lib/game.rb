@@ -1,4 +1,4 @@
-require './lib/request_formatter'
+require './lib/request_parser'
 
 class Game
 
@@ -12,8 +12,7 @@ class Game
   end
 
   def guessing_game_info
-    [
-      "Amount of guesses so far: #{guess_count}",
+    ["Amount of guesses so far: #{guess_count}",
       "Your guess: #{guess}",
       guess_accuracy
     ].join("\r\n")
@@ -22,18 +21,16 @@ class Game
   def guess_accuracy
     guess = @guess.to_i
     if guess > number
-      "Your guess was too high!"
+      "Your guess was too high!\r\n<strong>TRY AGAIN!!!</strong>"
     elsif guess < number
-      "Your guess was too low."
+      "Your guess was too low.\r\n<strong>TRY AGAIN!!</strong>"
     elsif guess == number
-      "Success!! You guessed correctly."
+      "SUCCEYESSS!! You guessed correctly."
     end
   end
 
   def start_game
-    "<p>
-    #{guessing_game_info}
-    </p>"
+    "<pre>#{guessing_game_info}</pre>"
   end
 
   def read_guess(client, request_lines)

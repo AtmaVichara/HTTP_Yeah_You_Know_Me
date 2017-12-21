@@ -34,4 +34,7 @@ class Paths
     path.start_with?("/game")
   end
 
+  def not_found?
+    !start_game? && !date_time? && !game? && !shut_down? && !word_search? && !root? && !hello?
+  end
 end
