@@ -35,6 +35,10 @@ class Paths
   end
 
   def not_found?
-    !start_game? && !date_time? && !game? && !shut_down? && !word_search? && !root? && !hello?
+    !start_game? && !date_time? && !game? && !shut_down? && !word_search? && !root? && !hello? && !server_error?
+  end
+
+  def server_error?
+    path == "/force_error"
   end
 end

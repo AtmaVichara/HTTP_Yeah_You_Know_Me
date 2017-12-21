@@ -34,7 +34,7 @@ class RequestParserTest < Minitest::Test
                          "Host: 127.0.0.1",
                          "Port: 9292",
                          "Origin: 127.0.0.1",
-                         "Accept: 9c8fb4f3-b7c4-4887-0281-c8b52749bcf3"]
+                         "Accept: */*"]
 
   REQUEST_PARSINGS    = {:verb=>"GET",
                          :path=>"/",

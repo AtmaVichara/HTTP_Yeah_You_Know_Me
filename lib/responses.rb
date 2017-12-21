@@ -57,4 +57,8 @@ class Responses
     "OI!! Why are you searching for somthing that doesn't exist... Come on now."
   end
 
+  def server_error
+    "SYSTEMERROR!!"
+  end
+
 end

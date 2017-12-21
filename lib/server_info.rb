@@ -22,8 +22,8 @@ class ServerInfo
       "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
-  def redirect_headers(status_code = "302", path, output)
-    ["http/1.1 #{status_code} found",
+  def redirect_headers(status_code = "302 found", path, output)
+    ["http/1.1 #{status_code}",
       "Location: http://127.0.0.1:9292/#{path}",
       "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
       "server: ruby",
