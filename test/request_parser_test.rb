@@ -42,7 +42,7 @@ class RequestParserTest < Minitest::Test
                          :host=>"Host: 127.0.0.1",
                          :port=>"9292",
                          :origin=>"127.0.0.1",
-                         :accept=>" 9c8fb4f3-b7c4-4887-0281-c8b52749bcf3"}
+                         :accept=>"Accept: */*"}
 
 
   def test_request_parser_parses_request_into_hash
