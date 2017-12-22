@@ -3,7 +3,6 @@ require "./lib/request_parser.rb"
 require "./lib/paths.rb"
 require "./lib/responses.rb"
 require "./lib/game.rb"
-require "pry"
 
 class Server
 
@@ -51,7 +50,7 @@ class Server
         header = server.headers(output)
       elsif path.start_game? && request_parsings[:verb] == "POST"
         output = server.format_output(responses.start_game)
-        header = server.headers(output)
+        header = server.redirect_headers("301 Moved Permanently", "game", output)
       elsif path.game? && request_parsings[:verb] == "GET"
         output = server.format_output(game.start_game)
         header = server.headers(output)
@@ -60,7 +59,10 @@ class Server
         header = server.redirect_headers("game", output)
       elsif path.not_found?
         output = server.format_output(responses.not_found)
-        header = server.headers("400", output)
+        header = server.headers("404 Forbidden", output)
+      elsif path.server_error?
+        output = server.format_output(responses.server_error)
+        header = server.headers("500 Internal Server Error", output)
       end
 
       client.puts header

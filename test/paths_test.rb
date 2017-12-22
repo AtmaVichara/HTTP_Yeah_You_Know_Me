@@ -59,4 +59,20 @@ class PathsTest < Minitest::Test
     refute path.start_game?
     refute path.root?
   end
+
+  def test_not_found_is_true
+    path = Paths.new("/asdfasfi")
+
+    assert path.not_found?
+    refute path.start_game?
+    refute path.root?
+  end
+
+  def test_server_error_is_true
+    path = Paths.new("/force_error")
+
+    assert path.server_error?
+    refute path.start_game?
+    refute path.root?
+  end
 end
