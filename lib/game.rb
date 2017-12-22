@@ -4,6 +4,8 @@ class Game
 
   attr_reader :number, :guess, :guess_count, :client, :request
 
+  attr_writer :guess, :number
+
   def initialize
     @number = rand(0..100)
     @guess = ""
@@ -13,8 +15,8 @@ class Game
 
   def guessing_game_info
     ["Amount of guesses so far: #{guess_count}",
-      "Your guess: #{guess}",
-      guess_accuracy
+     "Your guess: #{guess}",
+     guess_accuracy
     ].join("\r\n")
   end
 
@@ -30,7 +32,7 @@ class Game
   end
 
   def start_game
-    "<pre>#{guessing_game_info}</pre>"
+    "<p>#{guessing_game_info}</p>"
   end
 
   def read_guess(client, request_lines)
