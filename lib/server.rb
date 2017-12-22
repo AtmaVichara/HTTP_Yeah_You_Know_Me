@@ -3,7 +3,6 @@ require "./lib/request_parser.rb"
 require "./lib/paths.rb"
 require "./lib/responses.rb"
 require "./lib/game.rb"
-require "pry"
 
 class Server
 

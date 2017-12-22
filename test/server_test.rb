@@ -7,7 +7,6 @@ require 'minitest/pride'
 require './lib/server.rb'
 require 'socket'
 require 'faraday'
-require 'pry'
 
 class ServerTest < Minitest::Test
 
@@ -35,7 +34,6 @@ class ServerTest < Minitest::Test
     assert_equal 200, response.status
     assert_equal 200, response2.status
   end
-
 
   def test_date_time_body_returns_correct_time
     response = Faraday.get "http://127.0.0.1:9292/datetime"
@@ -82,7 +80,6 @@ class ServerTest < Minitest::Test
   def test_shut_down_shuts_down
     skip
     response = Faraday.get "http://127.0.0.1:9292/shut_down"
-
 
     assert_equal 200, response.status
   end

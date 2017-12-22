@@ -11,7 +11,6 @@ class ServerInfoTest < Minitest::Test
   REDIRECT_HEADERS = "http/1.1 404\r\nLocation: http://127.0.0.1:9292/hello\r\ndate: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}\r\nserver: ruby\r\ncontent-type: text/html; charset=iso-8859-1\r\ncontent-length: 9\r\n\r\n"
   HEADERS          = "http/1.1 404 ok\r\ndate: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}\r\nserver: ruby\r\ncontent-type: text/html; charset=iso-8859-1\r\ncontent-length: 9\r\n\r\n"
 
-
   def test_format_output_formats_response_in_html
     server_info = ServerInfo.new
     response = "How it do?"

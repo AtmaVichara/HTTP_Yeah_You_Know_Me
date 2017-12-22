@@ -16,21 +16,20 @@ class ServerInfo
 
   def headers(status_code = "200", output)
     ["http/1.1 #{status_code} ok",
-      "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-      "server: ruby",
-      "content-type: text/html; charset=iso-8859-1",
-      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+     "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
+     "server: ruby",
+     "content-type: text/html; charset=iso-8859-1",
+     "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
   def redirect_headers(status_code = "302 found", path, output)
     ["http/1.1 #{status_code}",
-      "Location: http://127.0.0.1:9292/#{path}",
-      "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-      "server: ruby",
-      "content-type: text/html; charset=iso-8859-1",
-      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+     "Location: http://127.0.0.1:9292/#{path}",
+     "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
+     "server: ruby",
+     "content-type: text/html; charset=iso-8859-1",
+     "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
-
 
   def format_output(response)
     "<html><head></head><body>#{response}</body></html>"

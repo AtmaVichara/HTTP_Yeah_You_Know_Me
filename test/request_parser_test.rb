@@ -2,7 +2,6 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/request_parser.rb'
 
-
 class RequestParserTest < Minitest::Test
   REQUEST_LINES       = ["GET / HTTP/1.1",
                          "Host: 127.0.0.1:9292",
